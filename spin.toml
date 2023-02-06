@@ -1,0 +1,16 @@
+spin_version = "1"
+authors = ["danbugs <danilochiarlone@gmail.com>"]
+description = ""
+name = "spin-dapr-poc"
+trigger = { type = "http", base = "/" }
+version = "0.1.0"
+
+[[component]]
+id = "spin-dapr-poc"
+source = "target/spin-http-js.wasm"
+exclude_files = ["**/node_modules"]
+allowed_http_hosts = ["insecure:allow-all"]
+[component.trigger]
+route = "/..."
+[component.build]
+command = "npm run build"

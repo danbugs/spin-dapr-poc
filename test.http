@@ -1,0 +1,5 @@
+@baseUrl = http://localhost:3500
+
+### GET baseUrl
+GET {{baseUrl}}
+dapr-app-id: spin-dapr-poc
