@@ -58,4 +58,4 @@ Connection: close
 
 Here's a video demo:
 
-[![Demo](https://img.youtube.com/vi/whatever.jpg)]()
+[![Demo](https://img.youtube.com/vi/whatever.jpg)](https://youtu.be/VP7bJXk6YFU)
