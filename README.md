@@ -8,6 +8,8 @@ This is a simple proof of concept for using Dapr with a Spin application.
 - [Dapr CLI](https://dapr.io/)
 - [Spin CLI](https://www.fermyon.com/spin)
 
+> for examplary installation for **Dapr CLI** and **Spin CLI** on Ubuntu see below
+
 ### Running the application
 
 1. Start Dapr
@@ -25,7 +27,7 @@ spin build
 3. Start the application
 
 ```bash
-dapr run --app-id spin-dapr-poc --app-port 3000 --dapr-http-port 3500 spin up
+dapr run --app-id spin-dapr-poc --app-port 3000 --dapr-http-port 3500 --resources-path ./components -- spin up
 ```
 
 4. Invoke the application
@@ -34,7 +36,7 @@ dapr run --app-id spin-dapr-poc --app-port 3000 --dapr-http-port 3500 spin up
 - Using the following curl command:
 
 ```bash
-curl -H "dapr-app-id: spin-dapr-poc" -X GET http://localhost:3500/hello
+curl -v -H "dapr-app-id: spin-dapr-poc" -X GET http://localhost:3500
 ```
 
 This app creates an entry onto a Redis statestore, and then retrieves that same entry.
@@ -59,3 +61,19 @@ Connection: close
 Here's a video demo:
 
 [![Demo](https://i.imgur.com/af7q9k7.jpg)](https://youtu.be/VP7bJXk6YFU)
+
+### sample installation on Ubuntu 22.10
+
+```shell
+sudo apt update
+sudo apt upgrade -y
+sudo apt install nodejs npm -y
+# install Dapr CLI
+wget -q https://raw.githubusercontent.com/dapr/cli/master/install/install.sh -O - | /bin/bash
+dapr init
+# install and configure Spin CLI
+curl -fsSL https://developer.fermyon.com/downloads/install.sh | bash
+sudo mv spin /usr/local/bin/
+spin plugin update
+spin plugin install js2wasm
+```
