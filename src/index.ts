@@ -13,15 +13,21 @@ export const handleRequest: HandleRequest = async function (request: HttpRequest
   const orderId = "257"
 
   // create a new order
-  const order = {
+  const orders = [{
     key: orderId.toString(),
     value: { orderId: orderId }
-  };
+  }];
 
-  const req = await fetch(`${stateStoreBaseUrl}`,
-    [JSON.stringify(order)]
+  const req = await fetch(`${stateStoreBaseUrl}?metadata.contentType=application/json`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(orders)
+    }
   );
-
+    
   const rec = await fetch(`${stateStoreBaseUrl}/${orderId}`);
   const recBody = decoder.decode(await rec.arrayBuffer() || new Uint8Array());
 
