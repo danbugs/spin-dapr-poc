@@ -1,6 +1,6 @@
-import { HandleRequest, HttpRequest, HttpResponse} from "@fermyon/spin-sdk"
+import { HandleRequest, HttpRequest, HttpResponse } from "@fermyon/spin-sdk"
 
-const protocol =  "http"
+const protocol = "http"
 const DAPR_HOST = "localhost"
 const port = 3500
 const DAPR_STATE_STORE_NAME = 'statestore'
@@ -9,33 +9,43 @@ const stateStoreBaseUrl = `${protocol}://${DAPR_HOST}:${port}/v1.0/state/${DAPR_
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8");
 
-export const handleRequest: HandleRequest = async function(request: HttpRequest): Promise<HttpResponse> {
+export const handleRequest: HandleRequest = async function (request: HttpRequest): Promise<HttpResponse> {
+
+  // do not process on Dapr startup health check
+  if(request.uri === "/hello") {
     const orderId = "257"
-    
+
     // create a new order
-    const order = {
+    const orders = [{
       key: orderId.toString(),
       value: { orderId: orderId }
-    };
+    }];
 
-    const req = await fetch(`${stateStoreBaseUrl}`,
+    const req = await fetch(`${stateStoreBaseUrl}?metadata.contentType=application/json`,
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "dapr-app-id": "api"
-          },
-          body: JSON.stringify(order)
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orders)
       }
     );
-
-    const rec = await fetch(`${stateStoreBaseUrl}/${orderId}`)
-    const recBody = decoder.decode(await rec.arrayBuffer() || new Uint8Array())
+        
+    const rec = await fetch(`${stateStoreBaseUrl}/${orderId}`);
+    const recBody = decoder.decode(await rec.arrayBuffer() || new Uint8Array());
 
     return {
       status: 200,
       headers: { "Content-Type": "application/json" },
       body: encoder.encode(recBody).buffer
-    }
+    };
+  }
+
+  return {
+    status: 200,
+    headers: {},
+    body: ""
+  }
+
 }
 
